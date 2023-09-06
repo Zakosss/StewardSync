@@ -1,0 +1,23 @@
+{
+  "name": "f1-stewarding",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zakosss/F1-Stewarding.git"
+  },
+  "author": "Zak Ottewell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Zakosss/F1-Stewarding/issues"
+  },
+  "homepage": "https://github.com/Zakosss/F1-Stewarding#readme",
+  "devDependencies": {
+    "electron": "^26.1.0"
+  }
+}
