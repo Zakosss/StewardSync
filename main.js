@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 const path = require('node:path')
 
 const createWindow = () => {
@@ -7,7 +7,9 @@ const createWindow = () => {
     height: 600,
     icon: './window/logo.png',
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      // devTools: false,
+      sandbox: false
     }
   })
 

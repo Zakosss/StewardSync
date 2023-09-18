@@ -6,7 +6,7 @@
         <title>F1 Stewarding</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="main.css">
         <link rel="icon" type="image/x-icon" href="./window/logo.png">
     </head>
     <body>
@@ -14,6 +14,40 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         
-        <script src="" async defer></script>
+        <div class="main">
+            <div class="top_bar">
+                <h1>OVERVIEW</h1>
+            </div>
+            <div class="playback_bar">
+                <div class="menu_button_back">
+                    <svg id="menuButton" class="menu_button" xmlns="http://www.w3.org/2000/svg" width="62" height="39" viewBox="0 0 62 39">
+                        <rect id="Rectangle_5" data-name="Rectangle 5" width="62" height="7" rx="3.5" fill="#12e29d"/>
+                        <rect id="Rectangle_6" data-name="Rectangle 6" width="62" height="7" rx="3.5" transform="translate(0 16)" fill="#12e29d"/>
+                        <rect id="Rectangle_7" data-name="Rectangle 7" width="62" height="7" rx="3.5" transform="translate(0 32)" fill="#12e29d"/>
+                    </svg>
+                </div>
+                <div class="menu">
+                    <div class="tab_button">
+                        <p class="icon">A</p>
+                    </div>
+                    <div class="tab_button">
+                        <p class="icon">A</p>
+                    </div>
+                    <div class="tab_button">
+                        <p class="icon">A</p>
+                    </div>
+                </div>
+                <p id="playbackText" class="playback_duration">12:23</p>
+                <div id="playback" class="playback_length">
+                    <div class="playback_position_bar">
+                        <div class="playback_pin"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="anime.min.js"></script>
+        <script src="renderer.js" async defer></script>
     </body>
 </html>
