@@ -17,6 +17,15 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
+  var currentTime = 0
+  var duration = 800
+
+  ipcMain.handle("playback:update", async (e,percent) => {
+    console.log(percent)
+    currentTime = duration*percent
+    return [currentTime,duration]
+  })
+
   createWindow()
 
   app.on('activate', () => {

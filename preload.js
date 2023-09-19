@@ -1,4 +1,4 @@
-const { contextBridge } = require("electron")
+const { contextBridge, ipcRenderer } = require("electron")
 
 const { F1TelemetryClient, constants } = require('@racehub-io/f1-telemetry-client');
 const { PACKETS } = constants;
@@ -26,6 +26,10 @@ contextBridge.exposeInMainWorld('versions', {
     chrome: () => process.versions.chrome,
     electron: () => process.versions.electron,
     app: () => "0.0.1"
+})
+
+contextBridge.exposeInMainWorld('API', {
+    updatePlayback: (percent) => ipcRenderer.invoke("playback:update", percent)
 })
 
 window.addEventListener('DOMContentLoaded', () => {
