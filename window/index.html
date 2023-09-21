@@ -6,17 +6,50 @@
         <title>F1 Stewarding</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/customCheckboxes.css">
+        <link rel="stylesheet" href="css/overview.css">
         <link rel="icon" type="image/x-icon" href="./window/logo.png">
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+
+        <div id="earlyDisclaimer">
+            <p>By checking the box below you acknowledge that this is an early release meant for testing only and bugs may be present, several features are also limited in the test. You also agree to not share this app without prior permission and not to share any information with anyone not involved in testing.</p>
+            <label class="container_terms">
+                <input id="acceptTerms" type="checkbox">
+                <span class="checkmark"></span>
+            </label>
+        </div>
         
         <div class="main">
             <div class="top_bar">
-                <h1>OVERVIEW</h1>
+                <h1 id="tabName">OVERVIEW</h1>
+            </div>
+            <div class="tab">
+                <div class="overview_t1">
+                    <div class="header">
+                        <div id="driverColour">
+                            <p id="position">#</p>
+                        </div>
+                        <p id="driverName">DRIVER</p>
+                        <p id="lapTime">LAP TIME</p>
+                        <p id="gap">GAP</p>
+                        <p id="interval">INTERVAL</p>
+                        <div id="sectors">
+                            <p id="s1">S1</p>
+                            <p id="s2">S2</p>
+                            <p id="s3">S3</p>
+                        </div>
+                        <p id="positionChange">POS</p>
+                        <p id="tyre">TYRE</p>
+                        <p id="pitAmount">PIT</p>
+                    </div>
+                </div>
+                <div class="overview_t2"></div>
+                <div class="overview_t3"></div>
             </div>
             <div class="playback_bar">
                 <div id="menuButton" class="menu_button_back">
@@ -27,14 +60,14 @@
                     </svg>
                 </div>
                 <div class="menu">
-                    <div class="tab_button">
+                    <div class="tab_button" value="overview">
+                        <p class="icon">O</p>
+                    </div>
+                    <div class="tab_button" value="analyse">
                         <p class="icon">A</p>
                     </div>
-                    <div class="tab_button">
-                        <p class="icon">A</p>
-                    </div>
-                    <div class="tab_button">
-                        <p class="icon">A</p>
+                    <div class="tab_button" value="penalise">
+                        <p class="icon">P</p>
                     </div>
                 </div>
                 <p id="playbackText" class="playback_duration">12:23</p>

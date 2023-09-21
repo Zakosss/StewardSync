@@ -1,5 +1,245 @@
 // document.getElementById("versionTag").innerText = "v"+window.versions.app()
 
+var dev = true
+
+function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+}
+
+function padTo3Digits(num) {
+    return num.toString().padEnd(3, '0');
+}
+
+function convertMsToSMS(s) {
+    var ms = s % 1000;
+    s = (s - ms) / 1000;
+    var secs = s % 60;
+    s = (s - secs) / 60;
+    var mins = s % 60;
+    var hrs = (s - mins) / 60;
+  
+    return padTo2Digits(secs) + '.' + padTo3Digits(ms);
+}
+
+
+var leaderboardEntries = []
+
+var teams = {
+    0: {
+        name: "Mercedes",
+        colour: "#6CD3BF"
+    },
+    1: {
+        name: "Ferrari",
+        colour: "#F91536"
+    },
+    2: {
+        name: "Red Bull Racing",
+        colour: "#3671C6"
+    },
+    3: {
+        name: "Williams",
+        colour: "#37BEDD"
+    },
+    4: {
+        name: "Aston Martin",
+        colour: "#358C75"
+    },
+    5: {
+        name: "Alpine",
+        colour: "#2293D1"
+    },
+    6: {
+        name: "Alpha Tauri",
+        colour: "#5E8FAA"
+    },
+    7: {
+        name: "Haas",
+        colour: "#B6BABD"
+    },
+    8: {
+        name: "McLaren",
+        colour: "#F58020"
+    },
+    9: {
+        name: "Alfa Romeo",
+        colour: "#C92D4B"
+    }
+}
+
+window.API.onParticipants((_event, value) => {
+    var currentParticipants = value.m_participants
+
+    for (let i = 0; i < value.m_numActiveCars; i++) {
+        if (leaderboardEntries[i] == null) {
+            document.querySelector(".overview_t1").innerHTML +=
+            `
+                <div id="driver${i}" class="driver">
+                    <div id="driverColour">
+                        <p id="position">#</p>
+                    </div>
+                    <p id="driverName"></p>
+                    <p id="lapTime">1:24.235</p>
+                    <p id="gap"></p>
+                    <p id="interval"></p>
+                    <div id="sectors">
+                        <p id="s1">24.235</p>
+                        <p id="s2">30.000</p>
+                        <p id="s3">30.000</p>
+                    </div>
+                    <p id="positionChange">+5</p>
+                    <p id="tyre">S</p>
+                    <p id="pitAmount">1</p>
+                </div>`
+    
+            leaderboardEntries[i] = document.getElementById("driver"+i)
+        }
+    }
+
+    for (i in currentParticipants) {
+        if (i >= value.m_numActiveCars) {
+            continue
+        }
+
+        var curData = currentParticipants[i]
+        var curEntry = leaderboardEntries[i]
+
+        var currentTeam = teams[curData.m_teamId]
+        
+        document.querySelector(`#driver${i} #driverName`).innerHTML = curData.m_name
+        document.querySelector(`#driver${i} #driverColour`).style.background = currentTeam.colour
+    }
+
+    $(".overview_t1").children().each((i,x) => {
+        $(x).css("height",`calc(${1/$(".overview_t1").children().length*100}% - 5px)`)
+        console.log(1/$(".overview_t1").children().length)
+    })
+})
+
+var allSectors = []
+allSectors[1] = []
+allSectors[2] = []
+allSectors[3] = []
+
+var driverSectors = []
+
+window.API.onLapData((_event, value) => {
+    var lapDatas = value.m_lapData
+
+    for (i in lapDatas) {
+        var curData = lapDatas[i]
+
+        var sectors = []
+
+        sectors[1] = curData.m_sector1TimeInMS
+        sectors[2] = curData.m_sector2TimeInMS
+        sectors[3] = curData.m_lastLapTimeInMS - (curData.m_sector1TimeInMS + curData.m_sector2TimeInMS)
+
+        sectors.forEach((sector,sectorIndex) => {
+            if (sector <= 0) {
+                sector = ""
+            } else {
+                if (sectorIndex == 3 && sectors[2] == "") {
+                    sector = ""
+                } else {
+                    sector = convertMsToSMS(sector)
+                }
+            }
+            sectors[sectorIndex] = sector
+        })
+
+        if (driverSectors[i] == null) {
+            driverSectors[i] = []
+        }
+
+        driverSectors[i][curData.m_currentLapNum] = []
+        driverSectors[i][curData.m_currentLapNum][1] = 0
+        driverSectors[i][curData.m_currentLapNum][2] = 0
+        driverSectors[i][curData.m_currentLapNum][3] = 0
+
+        document.querySelector(`#driver${i} #s1`).innerHTML = sectors[1]
+        document.querySelector(`#driver${i} #s2`).innerHTML = sectors[2]
+        document.querySelector(`#driver${i} #s3`).innerHTML = sectors[3]
+    }
+})
+
+// DISCLAIMER
+
+if (dev) {
+    $("#earlyDisclaimer").remove()
+}
+
+$("#acceptTerms").on("click", () => {
+    if ($("#acceptTerms").is(":checked")) {
+        anime({
+            targets: '.container_terms .checkmark',
+            opacity: 0,
+            duration: 1000,
+            easing: 'linear',
+            begin: function(anim) {
+                $("#earlyDisclaimer p").text("Thank you!")
+            },
+            complete: function(anim) {
+                anime({
+                    targets: '#earlyDisclaimer p',
+                    duration: 2500,
+                    easing: 'linear',
+                    complete: function(anim) {
+                        anime({
+                            targets: '#earlyDisclaimer',
+                            opacity: 0,
+                            duration: 1000,
+                            easing: 'linear',
+                            complete: function(anim) {
+                                $("#earlyDisclaimer").remove()
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
+})
+
+// TAB SYSTEM
+
+tabs = {
+    overview: {
+        name: "OVERVIEW",
+        elementCache: {}
+    },
+    analyse: {
+        name: "ANALYSE",
+        elementCache: {}
+    },
+    penalise: {
+        name: "PENALISE",
+        elementCache: {}
+    }
+}
+
+var tabButtonJQ
+var currentTab = tabs.overview
+
+function updateTab(tabButtonJQRec){
+    if (tabButtonJQ != undefined) {
+        tabButtonJQ.css("border-color","var(--accent)")
+        tabButtonJQ.css("border-size","5px")
+        tabButtonJQ.css("border-style","none")
+    }
+
+    tabButtonJQ = tabButtonJQRec
+
+    $("#tabName").text(currentTab.name)
+    if (tabButtonJQ != undefined) {
+        tabButtonJQ.css("border-color","var(--accent)")
+        tabButtonJQ.css("border-size","5px")
+        tabButtonJQ.css("border-style","solid")
+    }
+}
+
+updateTab($(".menu div:first"))
+
 // MENU
 
 var menuOpen = false
@@ -12,11 +252,7 @@ anime({
     easing: 'linear'
 })
 
-$("#menuButton").on("click", () => {
-    if (menuMoving) {return}
-
-    menuOpen = !menuOpen
-
+function updateMenu(){
     var translateY = "calc(-22.5px - 150px + 300px)"
 
     if (menuOpen) {
@@ -35,6 +271,25 @@ $("#menuButton").on("click", () => {
             menuMoving = false
         }
     })
+}
+
+$("#menuButton").on("click", () => {
+    if (menuMoving) {return}
+
+    menuOpen = !menuOpen
+
+    updateMenu()
+})
+
+$(".tab_button").on("click", (event) => {
+    menuOpen = false
+
+    updateMenu()
+
+    var tabName = event.currentTarget.getAttribute("value")
+
+    currentTab = tabs[tabName]
+    updateTab($(event.currentTarget))
 })
 
 // PLAYBACK

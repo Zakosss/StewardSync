@@ -1,10 +1,5 @@
 const { contextBridge, ipcRenderer } = require("electron")
 
-const { F1TelemetryClient, constants } = require('@racehub-io/f1-telemetry-client');
-const { PACKETS } = constants;
-
-const client = new F1TelemetryClient({ port: 20777 });
-
 function toHoursAndMinutes(totalSeconds) {
     const totalMinutes = Math.floor(totalSeconds / 60);
   
@@ -15,12 +10,6 @@ function toHoursAndMinutes(totalSeconds) {
     return { h: hours, m: minutes, s: seconds };
 }
 
-var carDots = {}
-
-client.on(PACKETS.participants, data => {
-    console.log(data)
-})
-
 contextBridge.exposeInMainWorld('versions', {
     node: () => process.versions.node,
     chrome: () => process.versions.chrome,
@@ -29,10 +18,13 @@ contextBridge.exposeInMainWorld('versions', {
 })
 
 contextBridge.exposeInMainWorld('API', {
-    updatePlayback: (percent) => ipcRenderer.invoke("playback:update", percent)
+    updatePlayback: (percent) => ipcRenderer.invoke("playback:update", percent),
+    onParticipants: (callback) => ipcRenderer.on('participants',callback),
+    onLapData: (callback) => ipcRenderer.on('lapData',callback)
 })
 
 window.addEventListener('DOMContentLoaded', () => {
+    /*
     const element = document.getElementById("playbackText")
     
     client.on(PACKETS.session, data => {
@@ -40,6 +32,5 @@ window.addEventListener('DOMContentLoaded', () => {
         
         element.innerHTML = `${String(time.h).padStart(2,"0")}:${String(time.m).padStart(2,"0")}:${String(time.s).padStart(2,"0")}`
     });
+    */
 })
-
-client.start();
