@@ -116,12 +116,14 @@ window.API.onParticipants((_event, value) => {
     })
 })
 
-var allSectors = []
-allSectors[1] = []
-allSectors[2] = []
-allSectors[3] = []
-
 var driverSectors = []
+var fastestSectors = []
+
+for (i=1; i <= 3; i++) {
+    fastestSectors[i] = 10000000000000
+}
+
+var fastestDriverSectors = []
 
 window.API.onLapData((_event, value) => {
     var lapDatas = value.m_lapData
@@ -133,33 +135,81 @@ window.API.onLapData((_event, value) => {
 
         sectors[1] = curData.m_sector1TimeInMS
         sectors[2] = curData.m_sector2TimeInMS
-        sectors[3] = curData.m_lastLapTimeInMS - (curData.m_sector1TimeInMS + curData.m_sector2TimeInMS)
-
-        sectors.forEach((sector,sectorIndex) => {
-            if (sector <= 0) {
-                sector = ""
-            } else {
-                if (sectorIndex == 3 && sectors[2] == "") {
-                    sector = ""
-                } else {
-                    sector = convertMsToSMS(sector)
-                }
-            }
-            sectors[sectorIndex] = sector
-        })
 
         if (driverSectors[i] == null) {
             driverSectors[i] = []
+            fastestDriverSectors[i] = []
+            for (x=1; x <= 3; x++) {
+                fastestDriverSectors[i][x] = 10000000000000
+            }
         }
 
-        driverSectors[i][curData.m_currentLapNum] = []
-        driverSectors[i][curData.m_currentLapNum][1] = 0
-        driverSectors[i][curData.m_currentLapNum][2] = 0
-        driverSectors[i][curData.m_currentLapNum][3] = 0
+        if (driverSectors[i][curData.m_currentLapNum] == null) {
+            driverSectors[i][curData.m_currentLapNum] = []
+        }
 
-        document.querySelector(`#driver${i} #s1`).innerHTML = sectors[1]
-        document.querySelector(`#driver${i} #s2`).innerHTML = sectors[2]
-        document.querySelector(`#driver${i} #s3`).innerHTML = sectors[3]
+        sectors[3] = curData.m_lastLapTimeInMS - (curData.m_sector1TimeInMS + curData.m_sector2TimeInMS)
+        
+        if (driverSectors[i][curData.m_currentLapNum-1] != null) {
+            driverSectors[i][curData.m_currentLapNum-1][3] = sectors[3]
+        }
+
+        sectors.forEach((sector,sectorIndex) => {
+            if (sector <= 0) {
+                
+            } else {
+                if (sectorIndex != 3) {
+                    driverSectors[i][curData.m_currentLapNum][sectorIndex] = sector
+                }
+                console.log(sector,fastestDriverSectors[i][sectorIndex])
+                if (sector < fastestDriverSectors[i][sectorIndex]) {
+                    fastestDriverSectors[i][sectorIndex] = sector
+                }
+                if (sector < fastestSectors[sectorIndex]) {
+                    fastestSectors[sectorIndex] = sector
+                } 
+            }
+        })
+
+        //console.log(fastestDriverSectors[i])
+
+        if (sectors[1] != 0) {
+            document.querySelector(`#driver${i} #s1`).innerHTML = convertMsToSMS(driverSectors[i][curData.m_currentLapNum][1])
+            if (fastestDriverSectors[i][1] == driverSectors[i][curData.m_currentLapNum][1]) {
+                document.querySelector(`#driver${i} #s1`).style.color = "yellowgreen"
+                if (fastestSectors[1] == driverSectors[i][curData.m_currentLapNum][1]) {
+                    document.querySelector(`#driver${i} #s1`).style.color = "violet"
+                }
+            } else {
+                document.querySelector(`#driver${i} #s2`).style.color = null
+            }
+            if (sectors[2] != 0) {
+                document.querySelector(`#driver${i} #s2`).innerHTML = convertMsToSMS(driverSectors[i][curData.m_currentLapNum][2])
+                if (fastestDriverSectors[i][2] == driverSectors[i][curData.m_currentLapNum][2]) {
+                    document.querySelector(`#driver${i} #s2`).style.color = "yellowgreen"
+                    if (fastestSectors[2] == driverSectors[i][curData.m_currentLapNum][2]) {
+                        document.querySelector(`#driver${i} #s2`).style.color = "violet"
+                    }
+                } else {
+                    document.querySelector(`#driver${i} #s2`).style.color = null
+                }
+            } else {
+                document.querySelector(`#driver${i} #s2`).innerHTML = ""
+            }
+            document.querySelector(`#driver${i} #s3`).innerHTML = ""
+        } else {
+            if (driverSectors[i][curData.m_currentLapNum-1] != null) {
+                document.querySelector(`#driver${i} #s3`).innerHTML = convertMsToSMS(driverSectors[i][curData.m_currentLapNum-1][3])
+                if (fastestDriverSectors[i][3] == driverSectors[i][curData.m_currentLapNum-1][3]) {
+                    document.querySelector(`#driver${i} #s3`).style.color = "yellowgreen"
+                    if (fastestSectors[3] == driverSectors[i][curData.m_currentLapNum-1][3]) {
+                        document.querySelector(`#driver${i} #s3`).style.color = "violet"
+                    }
+                } else {
+                    document.querySelector(`#driver${i} #s2`).style.color = null
+                }
+            }
+        }
     }
 })
 

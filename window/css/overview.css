@@ -95,6 +95,11 @@
     flex-shrink: 1.5;
 }
 
+.tab .overview_t1 .driver #sectors p {
+    background: var(--primary);
+    color: var(--secondary);
+}
+
 .tab .overview_t1 .driver #positionChange {
     flex: .5;
 }
