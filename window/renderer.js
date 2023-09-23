@@ -131,6 +131,8 @@ window.API.onLapData((_event, value) => {
     for (i in lapDatas) {
         var curData = lapDatas[i]
 
+        // SECTORS
+
         var sectors = []
 
         sectors[1] = curData.m_sector1TimeInMS
@@ -210,6 +212,15 @@ window.API.onLapData((_event, value) => {
                 }
             }
         }
+
+        // POSITION
+
+        document.querySelector(`#driver${i} #position`).innerHTML = curData.m_carPosition
+        var positionChange = curData.m_gridPosition - curData.m_carPosition
+        if (positionChange >= 0) {
+            positionChange = "+"+positionChange
+        }
+        document.querySelector(`#driver${i} #positionChange`).innerHTML = positionChange
     }
 })
 
