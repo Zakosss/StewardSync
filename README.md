@@ -1,1 +1,1 @@
-# F1 23 Stewarding App
+# StewardSync for F1 23
