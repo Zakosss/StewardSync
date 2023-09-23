@@ -6,7 +6,7 @@
     --primary: #5B586A;
     --secondary: #CFCCDB;
     --tertiary: #a4a0b6;
-    --accent: #E7FF4C;
+    --accent: #70EE9C;
 }
 
 html, body {
@@ -29,13 +29,13 @@ html, body {
     align-items: center;
     text-align: center;
     flex-direction: column;
-}
 
-#earlyDisclaimer p {
-    width: 50%;
-    max-height: 40%;
-    overflow: hidden;
-    color: var(--text);
+    p {
+        width: 50%;
+        max-height: 40%;
+        overflow: hidden;
+        color: var(--text);
+    }
 }
 
 .main {
@@ -57,10 +57,10 @@ html, body {
 
 .menu_button {
     max-height: 60%;
-}
 
-.menu_button rect {
-    fill: var(--accent);
+    rect {
+        fill: var(--accent);
+    }
 }
 
 .menu {
@@ -85,25 +85,25 @@ html, body {
     cursor: pointer;
     transition: background;
     transition-duration: 250ms;
-}
 
-.tab_button:hover {
-    background: color-mix(in srgb, var(--primary) 75%, black );
+    &:hover {
+        background: color-mix(in srgb, var(--tertiary) 75%, black );
+    }
+
+    .icon {
+        text-align: center;
+        padding: 0;
+        margin: auto;
+        width: auto;
+        height: auto;
+        color: var(--accent);
+        font-weight: 500;
+        font-size: 3em;
+    }
 }
 
 @media screen and (max-width: 768px) {
     
-}
-
-.tab_button .icon {
-    text-align: center;
-    padding: 0;
-    margin: auto;
-    width: auto;
-    height: auto;
-    color: var(--accent);
-    font-weight: 500;
-    font-size: 3em;
 }
 
 .top_bar {
