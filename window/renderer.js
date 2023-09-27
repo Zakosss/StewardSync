@@ -151,7 +151,7 @@ window.API.onLapData((_event, value) => {
             driverSectors[i][curData.m_currentLapNum] = []
         }
 
-        sectors[3] = curData.m_lastLapTimeInMS - (curData.m_sector1TimeInMS + curData.m_sector2TimeInMS)
+        sectors[3] = curData.m_lastLapTimeInMS - (curData.m_sector1TimeInMS + curData.m_sector2TimeInMS) // possible fix would be to use sector times from last lap duh
         
         if (driverSectors[i][curData.m_currentLapNum-1] != null) {
             driverSectors[i][curData.m_currentLapNum-1][3] = sectors[3]
