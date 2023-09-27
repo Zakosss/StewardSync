@@ -1,17 +1,17 @@
 .tab .overview_t2 {
   background: var(--secondary);
   grid-column-start: 5;
-  grid-column-end: span 2;
+  grid-column-end: span 4;
   grid-row-start: 1;
-  grid-row-end: span 8;
+  grid-row-end: span 4;
   margin: 10px;
 }
 .tab .overview_t3 {
   background: var(--secondary);
-  grid-column-start: 7;
-  grid-column-end: span 2;
-  grid-row-start: 1;
-  grid-row-end: span 8;
+  grid-column-start: 5;
+  grid-column-end: span 4;
+  grid-row-start: 5;
+  grid-row-end: span 4;
   margin: 10px;
 }
 .tab .overview_t1 {
@@ -22,6 +22,7 @@
   grid-row-end: span 8;
   margin: 10px;
   overflow-y: scroll;
+  position: relative;
 }
 .tab .overview_t1 .header {
   display: flex;
@@ -69,7 +70,7 @@
   background: var(--tertiary);
   justify-content: center;
   align-items: center;
-  position: static;
+  position: absolute;
   max-height: 4.7619%;
 }
 .tab .overview_t1 .driver p {

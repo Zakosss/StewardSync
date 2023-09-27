@@ -13,12 +13,13 @@ function padTo3Digits(num) {
 function convertMsToSMS(s) {
     var ms = s % 1000;
     s = (s - ms) / 1000;
-    var secs = s % 60;
+    //var secs = s % 60;
+    var secs = s
     s = (s - secs) / 60;
     var mins = s % 60;
     var hrs = (s - mins) / 60;
   
-    return padTo2Digits(secs) + '.' + padTo3Digits(ms);
+    return secs + '.' + padTo3Digits(ms); //padTo2Digits(secs)
 }
 
 
@@ -79,17 +80,17 @@ window.API.onParticipants((_event, value) => {
                         <p id="position">#</p>
                     </div>
                     <p id="driverName"></p>
-                    <p id="lapTime">1:24.235</p>
+                    <p id="lapTime"></p>
                     <p id="gap"></p>
                     <p id="interval"></p>
                     <div id="sectors">
-                        <p id="s1">24.235</p>
-                        <p id="s2">30.000</p>
-                        <p id="s3">30.000</p>
+                        <p id="s1"></p>
+                        <p id="s2"></p>
+                        <p id="s3"></p>
                     </div>
-                    <p id="positionChange">+5</p>
+                    <p id="positionChange"></p>
                     <p id="tyre">S</p>
-                    <p id="pitAmount">1</p>
+                    <p id="pitAmount">0</p>
                 </div>`
     
             leaderboardEntries[i] = document.getElementById("driver"+i)
@@ -221,6 +222,25 @@ window.API.onLapData((_event, value) => {
             positionChange = "+"+positionChange
         }
         document.querySelector(`#driver${i} #positionChange`).innerHTML = positionChange
+
+        // DELTAS
+
+        if (curData.m_deltaToRaceLeaderInMS == 0) {
+            $(`#driver${i} #gap`).text("")
+        $(`#driver${i} #interval`).text("")
+        } else {
+            $(`#driver${i} #gap`).text("+"+convertMsToSMS(curData.m_deltaToRaceLeaderInMS))
+            $(`#driver${i} #interval`).text("+"+convertMsToSMS(curData.m_deltaToCarInFrontInMS))
+        }
+
+        $(`#driver${i}`).css("z-index",20-curData.m_carPosition)
+
+        anime({
+            targets: `#driver${i}`,
+            translateY: ((curData.m_carPosition-1)*$(`#driver${i}`).height())+((curData.m_carPosition-1)*5),
+            duration: 100,
+            easing: 'linear',
+        })
     }
 })
 
