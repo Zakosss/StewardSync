@@ -84,9 +84,9 @@ window.API.onParticipants((_event, value) => {
                     <p id="gap"></p>
                     <p id="interval"></p>
                     <div id="sectors">
-                        <p id="s1"></p>
-                        <p id="s2"></p>
-                        <p id="s3"></p>
+                        <p id="s1">-</p>
+                        <p id="s2">-</p>
+                        <p id="s3">-</p>
                     </div>
                     <p id="positionChange"></p>
                     <p id="tyre">S</p>
@@ -150,10 +150,9 @@ window.API.onLapData((_event, value) => {
         if (driverSectors[i][curData.m_currentLapNum] == null) {
             driverSectors[i][curData.m_currentLapNum] = []
         }
-
-        sectors[3] = curData.m_lastLapTimeInMS - (curData.m_sector1TimeInMS + curData.m_sector2TimeInMS) // possible fix would be to use sector times from last lap duh
         
         if (driverSectors[i][curData.m_currentLapNum-1] != null) {
+            sectors[3] = curData.m_lastLapTimeInMS - (driverSectors[i][curData.m_currentLapNum-1][1] + driverSectors[i][curData.m_currentLapNum-1][2])
             driverSectors[i][curData.m_currentLapNum-1][3] = sectors[3]
         }
 
