@@ -20,7 +20,8 @@ contextBridge.exposeInMainWorld('versions', {
 contextBridge.exposeInMainWorld('API', {
     updatePlayback: (percent) => ipcRenderer.invoke("playback:update", percent),
     onParticipants: (callback) => ipcRenderer.on('participants',callback),
-    onLapData: (callback) => ipcRenderer.on('lapData',callback)
+    onLapData: (callback) => ipcRenderer.on('lapData',callback),
+    onCarStatus: (callback) => ipcRenderer.on('carStatus',callback)
 })
 
 window.addEventListener('DOMContentLoaded', () => {

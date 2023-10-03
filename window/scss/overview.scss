@@ -68,6 +68,10 @@
             #tyre {
                 flex: .5;
             }
+
+            #flag {
+                flex: .25;
+            }
     
             #pitAmount {
                 flex: .5;
@@ -115,6 +119,10 @@
                 p {
                     background: var(--primary);
                     color: var(--secondary);
+                    border-style: solid;
+                    border-width: 0;
+                    border-top-width: 2px;
+                    border-bottom-width: 2px;
                 }
             }
     
@@ -124,6 +132,14 @@
     
             #tyre {
                 flex: .5;
+                border: 2px;
+                border-style: solid;
+                background: var(--primary);
+            }
+
+            #flag {
+                flex: .25;
+                background: none;
             }
     
             #pitAmount {

@@ -60,6 +60,9 @@
 .tab .overview_t1 .header #tyre {
   flex: 0.5;
 }
+.tab .overview_t1 .header #flag {
+  flex: 0.25;
+}
 .tab .overview_t1 .header #pitAmount {
   flex: 0.5;
 }
@@ -101,12 +104,23 @@
 .tab .overview_t1 .driver #sectors p {
   background: var(--primary);
   color: var(--secondary);
+  border-style: solid;
+  border-width: 0;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
 }
 .tab .overview_t1 .driver #positionChange {
   flex: 0.5;
 }
 .tab .overview_t1 .driver #tyre {
   flex: 0.5;
+  border: 2px;
+  border-style: solid;
+  background: var(--primary);
+}
+.tab .overview_t1 .driver #flag {
+  flex: 0.25;
+  background: none;
 }
 .tab .overview_t1 .driver #pitAmount {
   flex: 0.5;

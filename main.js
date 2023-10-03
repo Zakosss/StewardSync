@@ -22,6 +22,10 @@ const createWindow = () => {
     win.webContents.send('participants',data)
   })
 
+  client.on(PACKETS.carStatus, data => {
+    win.webContents.send('carStatus',data)
+  })
+
   client.on(PACKETS.lapData, data => {
     win.webContents.send('lapData',data)
   })

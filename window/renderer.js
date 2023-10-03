@@ -10,6 +10,17 @@ function padTo3Digits(num) {
     return num.toString().padEnd(3, '0');
 }
 
+function convertMsToMSMS(s) {
+    var ms = s % 1000;
+    s = (s - ms) / 1000;
+    var secs = s % 60;
+    s = (s - secs) / 60;
+    var mins = s % 60;
+    var hrs = (s - mins) / 60;
+  
+    return mins + ':' + padTo2Digits(secs) + '.' + padTo3Digits(ms); //padTo2Digits(secs)
+}
+
 function convertMsToSMS(s) {
     var ms = s % 1000;
     s = (s - ms) / 1000;
@@ -21,7 +32,6 @@ function convertMsToSMS(s) {
   
     return secs + '.' + padTo3Digits(ms); //padTo2Digits(secs)
 }
-
 
 var leaderboardEntries = []
 
@@ -66,6 +76,75 @@ var teams = {
         name: "Alfa Romeo",
         colour: "#C92D4B"
     }
+}
+
+var carFiaFlags = {
+    0: {
+        name: "None",
+        colour: "none"
+    },
+    1: {
+        name: "Green",
+        colour: "#00cc00"
+    },
+    2: {
+        name: "Blue",
+        colour: "#0000ff"
+    },
+    3: {
+        name: "Yellow",
+        colour: "#fadf00"
+    },
+}
+
+var tyres = {
+    16: {
+        name: "C5"
+    },
+    17: {
+        name: "C4"
+    },
+    18: {
+        name: "C3"
+    },
+    19: {
+        name: "C2"
+    },
+    20: {
+        name: "C1"
+    },
+    21: {
+        name: "C0"
+    },
+    7: {
+        name: "Inter"
+    },
+    8: {
+        name: "Wet"
+    },
+}
+
+var tyresVisual = {
+    16: {
+        name: "Soft",
+        colour: "#da291c"
+    },
+    17: {
+        name: "Medium",
+        colour: "#ffd100"
+    },
+    18: {
+        name: "Hard",
+        colour: "#ffffff"
+    },
+    7: {
+        name: "Inter",
+        colour: "#70da1c"
+    },
+    8: {
+        name: "Wet",
+        colour: "#1c95da"
+    },
 }
 
 window.API.onParticipants((_event, value) => {
@@ -113,9 +192,12 @@ window.API.onParticipants((_event, value) => {
 
     $(".overview_t1").children().each((i,x) => {
         $(x).css("height",`calc(${1/$(".overview_t1").children().length*100}% - 5px)`)
-        console.log(1/$(".overview_t1").children().length)
+        //console.log(1/$(".overview_t1").children().length)
     })
 })
+
+var driverLaps = []
+var fastestLaps = []
 
 var driverSectors = []
 var fastestSectors = []
@@ -163,7 +245,7 @@ window.API.onLapData((_event, value) => {
                 if (sectorIndex != 3) {
                     driverSectors[i][curData.m_currentLapNum][sectorIndex] = sector
                 }
-                console.log(sector,fastestDriverSectors[i][sectorIndex])
+                //console.log(sector,fastestDriverSectors[i][sectorIndex])
                 if (sector < fastestDriverSectors[i][sectorIndex]) {
                     fastestDriverSectors[i][sectorIndex] = sector
                 }
@@ -175,42 +257,28 @@ window.API.onLapData((_event, value) => {
 
         //console.log(fastestDriverSectors[i])
 
-        if (sectors[1] != 0) {
-            document.querySelector(`#driver${i} #s1`).innerHTML = convertMsToSMS(driverSectors[i][curData.m_currentLapNum][1])
-            if (fastestDriverSectors[i][1] == driverSectors[i][curData.m_currentLapNum][1]) {
-                document.querySelector(`#driver${i} #s1`).style.color = "yellowgreen"
-                if (fastestSectors[1] == driverSectors[i][curData.m_currentLapNum][1]) {
-                    document.querySelector(`#driver${i} #s1`).style.color = "violet"
-                }
-            } else {
-                document.querySelector(`#driver${i} #s2`).style.color = null
-            }
-            if (sectors[2] != 0) {
-                document.querySelector(`#driver${i} #s2`).innerHTML = convertMsToSMS(driverSectors[i][curData.m_currentLapNum][2])
-                if (fastestDriverSectors[i][2] == driverSectors[i][curData.m_currentLapNum][2]) {
-                    document.querySelector(`#driver${i} #s2`).style.color = "yellowgreen"
-                    if (fastestSectors[2] == driverSectors[i][curData.m_currentLapNum][2]) {
-                        document.querySelector(`#driver${i} #s2`).style.color = "violet"
+        // Revised sector updating, all contained in one for loop now
+
+        for (x=1; x <= 3; x++) {
+            if (x == 3 && driverSectors[i][curData.m_currentLapNum-Math.floor(x/3)] == null) { continue }
+            if (sectors[x] != 0) {
+                console.log(`sector ${x}`)
+                document.querySelector(`#driver${i} #s${x}`).innerHTML = convertMsToSMS(driverSectors[i][curData.m_currentLapNum-Math.floor(x/3)][x])
+                if (fastestDriverSectors[i][x] == driverSectors[i][curData.m_currentLapNum-Math.floor(x/3)][x]) {
+                    document.querySelector(`#driver${i} #s${x}`).style.color = "yellowgreen"
+                    if (fastestSectors[x] == driverSectors[i][curData.m_currentLapNum-Math.floor(x/3)][x]) {
+                        document.querySelector(`#driver${i} #s${x}`).style.color = "violet"
                     }
                 } else {
-                    document.querySelector(`#driver${i} #s2`).style.color = null
-                }
-            } else {
-                document.querySelector(`#driver${i} #s2`).innerHTML = ""
-            }
-            document.querySelector(`#driver${i} #s3`).innerHTML = ""
-        } else {
-            if (driverSectors[i][curData.m_currentLapNum-1] != null) {
-                document.querySelector(`#driver${i} #s3`).innerHTML = convertMsToSMS(driverSectors[i][curData.m_currentLapNum-1][3])
-                if (fastestDriverSectors[i][3] == driverSectors[i][curData.m_currentLapNum-1][3]) {
-                    document.querySelector(`#driver${i} #s3`).style.color = "yellowgreen"
-                    if (fastestSectors[3] == driverSectors[i][curData.m_currentLapNum-1][3]) {
-                        document.querySelector(`#driver${i} #s3`).style.color = "violet"
-                    }
-                } else {
-                    document.querySelector(`#driver${i} #s2`).style.color = null
+                    document.querySelector(`#driver${i} #s${x}`).style.color = "gold"
                 }
             }
+        }
+
+        
+
+        if (curData.m_lastLapTimeInMS != 0) {
+            $(`#driver${i} #lapTime`).text(convertMsToMSMS(curData.m_lastLapTimeInMS))
         }
 
         // POSITION
@@ -232,6 +300,8 @@ window.API.onLapData((_event, value) => {
             $(`#driver${i} #interval`).text("+"+convertMsToSMS(curData.m_deltaToCarInFrontInMS))
         }
 
+        $(`#driver${i} #pitAmount`).text(curData.m_numPitStops)
+
         $(`#driver${i}`).css("z-index",20-curData.m_carPosition)
 
         anime({
@@ -241,6 +311,18 @@ window.API.onLapData((_event, value) => {
             easing: 'linear',
         })
     }
+})
+
+window.API.onCarStatus((_event, value) => {
+    var carStatus = value.m_carStatusData
+    for (i in carStatus) {
+        if (leaderboardEntries[i] != null) {
+            var cur = carStatus[i]
+            $(`#driver${i} #tyre`).text(tyresVisual[cur.m_visualTyreCompound].name.charAt(0))
+            $(`#driver${i} #tyre`).css("color",tyresVisual[cur.m_visualTyreCompound].colour)
+        }
+    }
+    
 })
 
 // DISCLAIMER
@@ -384,9 +466,9 @@ updatePlayback(currentTime)
 $("#playback").on("click", (event) => {
     if (event.target.id=="playbackPin") {return}
 
-    console.log(event)
+    //console.log(event)
     
-    console.log(event.offsetX/$("#playback").width())
+    //console.log(event.offsetX/$("#playback").width())
 
     updatePlayback(event.offsetX/$("#playback").width())
 })
